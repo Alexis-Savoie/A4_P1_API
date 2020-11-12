@@ -1,13 +1,12 @@
-login = require("./authRoutes/loginRoute.js")
-other = require("./otherRoutes/otherRoute.js")
-register = require("./authRoutes/registerRoute")
-routes = require("express").Router()
+const login = require('./authRoutes/loginRoute'),
+    other = require('./otherRoutes/otherRoute'),
+    changePassword = require('./otherRoutes/changePassword'),
+    routes = require('express').Router()
 
 
-routes.use("/", other)
+//routes.use('/login', login);
+routes.use('/', other);
 routes.use('/', login);
-routes.use("/", register)
 
-// routes.use("/register", register)
 
-module.exports = routes
+module.exports = routes;
