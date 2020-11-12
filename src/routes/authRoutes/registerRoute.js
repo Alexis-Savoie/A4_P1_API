@@ -1,6 +1,7 @@
 const register = require("express").Router()
 const users = require("../../models/usersModel")
 let sr = require("../../others/sendReturn")
+const bcrypt = require("bcrypt")
 const mongoose = require("mongoose")
 let bodyParser = require("body-parser")
 
@@ -21,6 +22,8 @@ register.post("/register", (req, res) => {
           email: req.body.email,
           password: req.body.password
         })
+        const salt = bcrypt.genSaltSync(10)
+        user.password = bcrypt.hashSync(user.password, salt)
         user.save()
         sr.sendReturn(res, 200, {
           error: false,
