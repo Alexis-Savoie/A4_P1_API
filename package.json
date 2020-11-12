@@ -18,7 +18,10 @@
   "homepage": "https://github.com/Alexis-Savoie/A4_P1_API#readme",
   "dependencies": {
     "bcrypt": "^5.0.0",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "eslint": "^7.13.0",
+    "eslint-plugin-json": "^2.1.2",
     "express": "^4.17.1",
     "jasmine": "^3.6.3",
     "jshint": "^2.12.0",
