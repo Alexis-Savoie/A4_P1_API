@@ -4,84 +4,101 @@ const bodyParser = require("body-parser")
 
 const login = require('express').Router();
 
+
+
+
 //#region user connexion route
 login.post("/login", (req, res) => {
     // check if an user is registered with this username
     const users = require('../../models/usersModel');
     let user = new users();
     //console.log(req.body)
-    users.find({ email: req.body.email }, function (err, docs) {
-        if (err) {
-            console.log(err);
+    users.find({ email: req.body.email }, function (error, results) {
+        if (error) {
+            console.log(error);
         }
         else {
-            if (docs.length == 1)
-                sr.sendReturn(res, 200,
+            // mongoDB error case
+            if (error) others.sendReturn(res);
+            // if empty result
+            else if (results.length == 0)
+                others.sendReturn(res, 401,
                     {
-                        error: false,
-                        message: "User exists"
+                        error: true,
+                        message: "Incorrect username/password"
                     });
-            else
-                sr.sendReturn(res, 200,
-                    {
-                        error: false,
-                        message: "User doesn't exists"
-                    });
+
+
+            // if it's a existing username then check password 
+            else {
+                bcrypt.compare(req.body.password, results[0].password).then(isOk => {
+                    if (isOk) {
+                        //Version that never expire
+                        var token = jwt.sign({ id: results[0]._id }, "prout", {
+                            algorithm: "HS256"
+                        })
+                        //Update token
+                        let insertData =
+                        {
+                            token: token,
+                        };
+
+                        email = results[0].email;
+                        req.newData.username = token;
+
+                        MyModel.findOneAndUpdate({ '_id': results[0]._id }, req.newData, { upsert: true }, function (err, doc) {
+                            if (error) others.sendReturn(res);
+                            else
+                                others.sendReturn(res, 200,
+                                    {
+                                        error: false,
+                                        message: "login successful",
+                                        token: token,
+                                        email: email
+                                    });
+                        });
+
+                    }
+                    else {
+                        others.sendReturn(res, 401,
+                            {
+                                error: true,
+                                message: "Incorrect username/password"
+                            });
+                    }
+                });
+            }
         }
     });
-    /*
-        connect.query(
-            "SELECT * FROM users WHERE phone = '" + req.body.phone + "';", (error, results) => {
-                // SQL error case
-                if (error) others.sendReturn(res);
-                // if empty result
-                else if (results.length == 0)
-                    others.sendReturn(res, 401,
-                        {
-                            error: true,
-                            message: "Incorrect username/password"
-                        });
-                // if it's a existing username then check password 
-                else {
-                    bcrypt.compare(req.body.password, results[0].password).then(isOk => {
-                        if (isOk) {
-                            //Version that never expire
-                            var token = jwt.sign({ id: results[0].id_user }, constants.jwtSecretUser, {
-                                algorithm: "HS256"
-                            })
-                            //Update token
-                            let insertData =
-                            {
-                                token: token,
-                            };
-                            id_user = results[0].id_user;
-                            mail = results[0].mail;
-                            connect.query("UPDATE users SET ? WHERE id_user = " + results[0].id_user + "", insertData, (error, results) => {
-                                if (error) others.sendReturn(res);
-                                else
-                                    others.sendReturn(res, 200,
-                                        {
-                                            error: false,
-                                            message: "login successful",
-                                            id_user: id_user,
-                                            token: token,
-                                            mail: mail
-                                        });
-                            });
-                        }
-                        else {
-                            others.sendReturn(res, 401,
-                                {
-                                    error: true,
-                                    message: "Incorrect username/password"
-                                });
-                        }
-                    });
-                }
-            });
-            */
 })
 //#endregion
+
+
+//#region user logout route
+login.post("/logout", (req, res) => {
+    // check if an user is registered with this username
+    const users = require('../../models/usersModel');
+    let user = new users();
+    
+    req.newData.username = "";
+    MyModel.findOneAndUpdate({ 'token': req.body.token }, req.newData, { upsert: true }, function (err, doc) {
+        if (error) others.sendReturn(res);
+        else
+            others.sendReturn(res, 200,
+                {
+                    error: false,
+                    message: "login successful",
+                    token: token,
+                    email: email
+                });
+    });
+})
+//#endregion
+
+
+
+
+
 
 module.exports = login;
 
