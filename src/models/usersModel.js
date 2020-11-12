@@ -18,6 +18,11 @@ const Users = new Schema({
         required: true,
     },
 
+    token: {
+        index: true,
+        type: String,
+    },
+
     temporary_password: {
         index: true,
         type: String,
