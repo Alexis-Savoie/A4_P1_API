@@ -7,30 +7,28 @@ let bodyParser = require("body-parser")
 register.post("/register", (req, res) => {
   const users = require("../../models/usersModel")
 
-  users.find({ email: req.body.email }, function(error, doc) {
-    if (err) {
-      console.log(err)
+  users.find({ email: req.body.email }, function(error, results) {
+    if (error) {
+      console.log(error)
     } else {
-      if (docs.length == 1)
+      if (results.length == 1)
         sr.sendReturn(res, 200, {
           error: false,
           message: "User exists"
         })
-      else
+      else {
+        let user = new users({
+          email: req.body.email,
+          password: req.body.password
+        })
+        user.save()
         sr.sendReturn(res, 200, {
           error: false,
-          message: "User doesn't exists"
+          message: "User succefully created "
         })
+      }
     }
   })
-
-  let user = new users({
-    email: req.body.email,
-    password: req.body.password,
-    temporary_password: req.body.temporary_password
-  })
-  user.save()
-  res.send(user)
 })
 
 module.exports = register
