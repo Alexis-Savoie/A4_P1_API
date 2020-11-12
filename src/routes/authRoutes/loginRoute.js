@@ -1,7 +1,8 @@
 // Login route
 var sr = require('../../others/sendReturn');
+const middleware = require('../otherRoutes/middleware');
 const bodyParser = require("body-parser")
-const bcrypt = require("bcryptjs")
+const bcrypt = require("bcrypt")
 
 const login = require('express').Router();
 
@@ -20,10 +21,10 @@ login.post("/login", (req, res) => {
         }
         else {
             // mongoDB error case
-            if (error) others.sendReturn(res);
+            if (error) sr.sendReturn(res);
             // if empty result
             else if (results.length == 0)
-                others.sendReturn(res, 401,
+                sr.sendReturn(res, 401,
                     {
                         error: true,
                         message: "Incorrect username/password"
@@ -48,9 +49,9 @@ login.post("/login", (req, res) => {
                         req.newData.username = token;
 
                         users.findOneAndUpdate({ '_id': results[0]._id }, req.newData, { upsert: true }, function (err, doc) {
-                            if (error) others.sendReturn(res);
+                            if (error) sr.sendReturn(res);
                             else
-                                others.sendReturn(res, 200,
+                                sr.sendReturn(res, 200,
                                     {
                                         error: false,
                                         message: "login successful",
@@ -61,7 +62,7 @@ login.post("/login", (req, res) => {
 
                     }
                     else {
-                        others.sendReturn(res, 401,
+                        sr.sendReturn(res, 401,
                             {
                                 error: true,
                                 message: "Incorrect username/password"
@@ -83,9 +84,9 @@ login.post("/logout", (req, res) => {
     
     req.newData.username = "";
     users.findOneAndUpdate({ 'token': req.body.token }, req.newData, { upsert: true }, function (err, doc) {
-        if (error) others.sendReturn(res);
+        if (error) sr.sendReturn(res);
         else
-            others.sendReturn(res, 200,
+            sr.sendReturn(res, 200,
                 {
                     error: false,
                     message: "login successful",

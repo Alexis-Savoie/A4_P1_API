@@ -7,4 +7,5 @@ const login = require('./authRoutes/loginRoute.js'),
 routes.use('/', other);
 routes.use('/', login);
 
+
 module.exports = routes;
