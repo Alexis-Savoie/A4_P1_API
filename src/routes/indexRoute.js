@@ -1,5 +1,6 @@
-const login = require('./authRoutes/loginRoute.js'),
-    other = require('./otherRoutes/otherRoute.js'),
+const login = require('./authRoutes/loginRoute'),
+    other = require('./otherRoutes/otherRoute'),
+    changePassword = require('./otherRoutes/changePassword'),
     routes = require('express').Router()
 
 

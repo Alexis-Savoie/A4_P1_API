@@ -46,7 +46,7 @@ login.post("/login", (req, res) => {
                         };
 
                         email = results[0].email;
-                        req.newData.username = token;
+                        req.newData.token = token;
 
                         users.findOneAndUpdate({ '_id': results[0]._id }, req.newData, { upsert: true }, function (err, doc) {
                             if (error) sr.sendReturn(res);

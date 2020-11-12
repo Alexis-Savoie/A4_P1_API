@@ -2,7 +2,6 @@ var sr = require('../../others/sendReturn');
 const bodyParser = require("body-parser")
 const bcrypt = require("bcrypt")
 
-const login = require('express').Router();
 
 
 
