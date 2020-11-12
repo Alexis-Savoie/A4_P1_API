@@ -1,6 +1,7 @@
 // Login route
 var sr = require('../../others/sendReturn');
 const bodyParser = require("body-parser")
+const bcrypt = require("bcryptjs")
 
 const login = require('express').Router();
 
@@ -46,7 +47,7 @@ login.post("/login", (req, res) => {
                         email = results[0].email;
                         req.newData.username = token;
 
-                        MyModel.findOneAndUpdate({ '_id': results[0]._id }, req.newData, { upsert: true }, function (err, doc) {
+                        users.findOneAndUpdate({ '_id': results[0]._id }, req.newData, { upsert: true }, function (err, doc) {
                             if (error) others.sendReturn(res);
                             else
                                 others.sendReturn(res, 200,
@@ -81,7 +82,7 @@ login.post("/logout", (req, res) => {
     let user = new users();
     
     req.newData.username = "";
-    MyModel.findOneAndUpdate({ 'token': req.body.token }, req.newData, { upsert: true }, function (err, doc) {
+    users.findOneAndUpdate({ 'token': req.body.token }, req.newData, { upsert: true }, function (err, doc) {
         if (error) others.sendReturn(res);
         else
             others.sendReturn(res, 200,
