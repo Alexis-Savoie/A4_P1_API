@@ -7,9 +7,8 @@ const changePassword = require('express').Router();
 
 
 
-
 //#region change user password route
-changePassword.put("/user/updateUserPassword", (req, res) => {
+changePassword.put("/changePassword", (req, res) => {
     // check if an user is registered with this username
     const users = require('../../models/usersModel');
     let user = new users();
@@ -41,9 +40,8 @@ changePassword.put("/user/updateUserPassword", (req, res) => {
                                     });
                                 });
                                 // once the password is hashed we save it in the DB
-                                req.newData.token = token;
 
-                                users.findOneAndUpdate({ '_id': results[0]._id }, req.newData, { upsert: true }, function (err, doc) {
+                                users.findOneAndUpdate({ _id: results[0]._id }, { password: req.body.password2 }, { upsert: true }, function (error, results) {
                                     if (error) sr.sendReturn(res);
                                     else {
                                         sr.sendReturn(res, 201,
@@ -78,3 +76,5 @@ changePassword.put("/user/updateUserPassword", (req, res) => {
     });
 })
 //#endregion
+
+module.exports = changePassword;
