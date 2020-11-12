@@ -3,6 +3,7 @@ var sr = require('../../others/sendReturn');
 const middleware = require('../otherRoutes/middleware');
 const bodyParser = require("body-parser")
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
 
 const login = require('express').Router();
 
@@ -46,9 +47,8 @@ login.post("/login", (req, res) => {
                         };
 
                         email = results[0].email;
-                        req.newData.token = token;
 
-                        users.findOneAndUpdate({ '_id': results[0]._id }, req.newData, { upsert: true }, function (err, doc) {
+                        users.findOneAndUpdate({ _id: results[0]._id }, { token: token }, { upsert: true }, function (err, doc) {
                             if (error) sr.sendReturn(res);
                             else
                                 sr.sendReturn(res, 200,
@@ -81,22 +81,18 @@ login.post("/logout", (req, res) => {
     // check if an user is registered with this username
     const users = require('../../models/usersModel');
     let user = new users();
-    
-    req.newData.username = "";
-    users.findOneAndUpdate({ 'token': req.body.token }, req.newData, { upsert: true }, function (err, doc) {
+
+    users.findOneAndUpdate({ token: req.body.token }, { token: "" }, { upsert: true }, function (error, results) {
         if (error) sr.sendReturn(res);
         else
             sr.sendReturn(res, 200,
                 {
                     error: false,
-                    message: "login successful",
-                    token: token,
-                    email: email
+                    message: "logout successful"
                 });
     });
 })
 //#endregion
-
 
 
 

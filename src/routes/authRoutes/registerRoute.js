@@ -15,7 +15,7 @@ register.post("/register", (req, res) => {
       if (results.length == 1)
         sr.sendReturn(res, 200, {
           error: false,
-          message: "User exists"
+          message: "User already exists"
         })
       else {
         let user = new users({
@@ -27,7 +27,7 @@ register.post("/register", (req, res) => {
         user.save()
         sr.sendReturn(res, 200, {
           error: false,
-          message: "User succefully created "
+          message: "User succesfully created "
         })
       }
     }
