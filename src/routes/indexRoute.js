@@ -5,5 +5,6 @@ const login = require('./authRoutes/loginRoute.js'),
 
 //routes.use('/login', login);
 routes.use('/', other);
+routes.use('/', login);
 
 module.exports = routes;
