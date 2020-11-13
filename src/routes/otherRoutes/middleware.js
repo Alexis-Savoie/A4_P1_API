@@ -1,6 +1,11 @@
-var sr = require('../../others/sendReturn');
+// External packages
 const bodyParser = require("body-parser")
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken")
+
+// Local imports
+var sr = require('../../others/sendReturn');
+const constants = require('../../others/constants');
 
 
 
@@ -31,9 +36,80 @@ const middleware = (req, res, next) => {
 //#endregion
 
 
+//#region user token check middleware
+const middlewareSessionUser = (req, res, next) => {
+    // Check if it's a GET or a POST
+    if (!req.body.token) {
+        token = req.params.token
+    }
+    else {
+        token = req.body.token
+    }
+    // no data case
+    if (token == undefined || token.trim().length == 0) {
+        others.sendReturn(res, 401,
+            {
+                error: true,
+                message: "Unauthorized"
+            });
+    }
+    else {
+            // check if an user is crurrently using this token 
+        const users = require('../../models/usersModel');
+        let user = new users();
+        users.find({ token : token }, function (error, results) {
+            console.log("results  : ")
+            console.log(results)
+            if (error) sr.sendReturn(res);
+            else {
+                if (results === undefined || results.length == 0)
+                    sr.sendReturn(res, 401,
+                        {
+                            error: true,
+                            message: "Unauthorized"
+                        });
+                else {
+                    var success = true
+                    try {
+                        var decoded = jwt.verify(token, constants.jwtSecretUser);
+                    }
+                    catch (e) {
+                        console.log("oh non 1")
+                        console.log(e)
+                        success = false
+                        sr.sendReturn(res, 401,
+                            {
+                                error: true,
+                                message: "Unauthorized"
+                            });
+                    }
+                    console.log("decoded : ")
+                    console.log(decoded)
+                    if (success == true) {
+                        if (results[0]._id != decoded._id) {
+                            console.log("oh non 2")
+                            sr.sendReturn(res, 401,
+                                {
+                                    error: true,
+                                    message: "Unauthorized"
+                                });
+                        }
+                        else {
+                            next();
+                        }
+                    }
+                }
+            }
+        })
+    }
+};
+//#endregion
+
+
 
 // Exports all the functions
 module.exports =
 {
-    middleware: middleware
+    middleware: middleware,
+    middlewareSessionUser: middlewareSessionUser
 };
