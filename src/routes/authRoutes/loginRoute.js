@@ -1,11 +1,11 @@
 // External packages
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
+const config = require('config');
 
 // Local imports
 var sr = require('../../others/sendReturn');
 const middleware = require('../otherRoutes/middleware');
-const constants = require('../../others/constants');
 
 // For exports
 const login = require('express').Router();
@@ -37,7 +37,7 @@ login.post("/login", (req, res) => {
                 bcrypt.compare(req.body.password, results[0].password).then(isOk => {
                     if (isOk) {
                         //Version that never expire
-                        var token = jwt.sign({ _id: results[0]._id }, constants.jwtSecretUser, {
+                        var token = jwt.sign({ _id: results[0]._id }, config.get('Constants.jwtSecretUser'), {
                             algorithm: "HS256"
                         })
                         //Update token
@@ -47,7 +47,6 @@ login.post("/login", (req, res) => {
                         };
 
                         email = results[0].email;
-
                         users.findOneAndUpdate({ _id: results[0]._id }, { token: token }, { upsert: true }, function (err, doc) {
                             if (error) sr.sendReturn(res);
                             else
@@ -62,6 +61,10 @@ login.post("/login", (req, res) => {
 
                     }
                     else {
+                        if (results[0].password != "")
+                        {
+
+                        }
                         sr.sendReturn(res, 401,
                             {
                                 error: true,

@@ -1,5 +1,5 @@
 /node_modules
 node_modules
 package-lock.json
-constants.js
-/src/others/constants.js
+production.json
+/config/production.json
