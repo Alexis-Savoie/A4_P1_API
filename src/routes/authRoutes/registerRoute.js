@@ -1,9 +1,14 @@
-const register = require("express").Router()
-const users = require("../../models/usersModel")
-let sr = require("../../others/sendReturn")
+// External packages
 const bcrypt = require("bcrypt")
 const mongoose = require("mongoose")
-let bodyParser = require("body-parser")
+
+// Local imports
+let sr = require("../../others/sendReturn")
+const users = require("../../models/usersModel")
+
+// For export
+const register = require("express").Router()
+
 
 register.post("/register", (req, res) => {
   const users = require("../../models/usersModel")
