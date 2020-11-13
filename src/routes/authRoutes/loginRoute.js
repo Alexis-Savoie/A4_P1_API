@@ -1,12 +1,14 @@
-// Login route
-var sr = require('../../others/sendReturn');
-const middleware = require('../otherRoutes/middleware');
-const bodyParser = require("body-parser")
+// External packages
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
 
-const login = require('express').Router();
+// Local imports
+var sr = require('../../others/sendReturn');
+const middleware = require('../otherRoutes/middleware');
+const constants = require('../../others/constants');
 
+// For exports
+const login = require('express').Router();
 
 
 
@@ -17,9 +19,7 @@ login.post("/login", (req, res) => {
     let user = new users();
     //console.log(req.body)
     users.find({ email: req.body.email }, function (error, results) {
-        if (error) {
-            console.log(error);
-        }
+        if (error) sr.sendReturn(res);
         else {
             // mongoDB error case
             if (error) sr.sendReturn(res);
@@ -37,7 +37,7 @@ login.post("/login", (req, res) => {
                 bcrypt.compare(req.body.password, results[0].password).then(isOk => {
                     if (isOk) {
                         //Version that never expire
-                        var token = jwt.sign({ id: results[0]._id }, "prout", {
+                        var token = jwt.sign({ _id: results[0]._id }, constants.jwtSecretUser, {
                             algorithm: "HS256"
                         })
                         //Update token
@@ -77,7 +77,7 @@ login.post("/login", (req, res) => {
 
 
 //#region user logout route
-login.post("/logout", (req, res) => {
+login.post("/logout", middleware.middlewareSessionUser, (req, res) => {
     // check if an user is registered with this username
     const users = require('../../models/usersModel');
     let user = new users();

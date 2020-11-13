@@ -1,8 +1,12 @@
-var sr = require('../../others/sendReturn');
-const middleware = require('../otherRoutes/middleware');
+// External ackages
 const bodyParser = require("body-parser")
 const bcrypt = require("bcrypt")
 
+// Local imports
+const middleware = require('../otherRoutes/middleware');
+var sr = require('../../others/sendReturn');
+
+// For export
 const changePassword = require('express').Router();
 
 
