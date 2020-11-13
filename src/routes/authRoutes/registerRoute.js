@@ -25,7 +25,8 @@ register.post("/register", (req, res) => {
       else {
         let user = new users({
           email: req.body.email,
-          password: req.body.password
+          password: req.body.password,
+          temporary_password: ""
         })
         const salt = bcrypt.genSaltSync(10)
         user.password = bcrypt.hashSync(user.password, salt)
