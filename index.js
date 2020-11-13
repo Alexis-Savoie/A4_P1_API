@@ -1,16 +1,11 @@
-const express = require('express'); // Chargement Express
+const express = require("express") // Chargement Express
 const bodyParser = require("body-parser")
-const app = express(); // Instance Express
+const app = express() // Instance Express
 
+global.bdd = require("./src/models/indexModel")
+const route = require("./src/routes/indexRoute")
 
-global.bdd = require('./src/models/indexModel');
-const route = require('./src/routes/indexRoute');
-
-const middleware = require('./src/routes/otherRoutes/middleware')
-
-
-
-
+const middleware = require("./src/routes/otherRoutes/middleware")
 
 //Zone de test
 /*
@@ -35,11 +30,7 @@ newUser.save()
 */
 //End Zone de test
 
-
-
-
-const port = process.env.PORT || 8020; // Port ecoute du server
-
+const port = process.env.PORT || 8020 // Port ecoute du server
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }))
@@ -48,11 +39,8 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 // Middelware
-app.use('/', middleware.middleware);
-app.use(route);
-
-
-
+app.use("/", middleware.middleware)
+app.use(route)
 
 // Run serve
-app.listen(port, () => console.log(`listening on http://localhost:${port}`));
+app.listen(port, () => console.log(`listening on http://localhost:${port}`))
