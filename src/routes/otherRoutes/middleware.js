@@ -17,6 +17,7 @@ const middleware = (req, res, next) => {
         return (req.body.email != undefined && String(req.body.email).match(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/) == null) ||
             (req.body.password != undefined && req.body.password == "") ||
             (req.body.password2 != undefined && req.body.password2 == "") ||
+            (req.body.token != undefined && req.body.token == "") ||
             (req.body.itineraryName != undefined && req.body.itineraryName == "") ||
             (req.body.emailUser != undefined && req.body.emailUser == "") ||
             (req.body.coordinate != undefined && req.body.coordinate == "");
@@ -35,6 +36,7 @@ const middleware = (req, res, next) => {
 //#endregion
 
 
+
 //#region user token check middleware
 const middlewareSessionUser = (req, res, next) => {
     // Check if it's a GET or a POST
@@ -46,7 +48,7 @@ const middlewareSessionUser = (req, res, next) => {
     }
     // no data case
     if (token == undefined || token.trim().length == 0) {
-        others.sendReturn(res, 401,
+        sr.sendReturn(res, 401,
             {
                 error: true,
                 message: "Unauthorized"

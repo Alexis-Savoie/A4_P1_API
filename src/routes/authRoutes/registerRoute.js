@@ -18,7 +18,7 @@ register.post("/register", (req, res) => {
       console.log(error)
     } else {
       if (results.length == 1)
-        sr.sendReturn(res, 200, {
+        sr.sendReturn(res, 401, {
           error: false,
           message: "User already exists"
         })
@@ -31,7 +31,7 @@ register.post("/register", (req, res) => {
         const salt = bcrypt.genSaltSync(10)
         user.password = bcrypt.hashSync(user.password, salt)
         user.save()
-        sr.sendReturn(res, 200, {
+        sr.sendReturn(res, 201, {
           error: false,
           message: "User succesfully created "
         })
