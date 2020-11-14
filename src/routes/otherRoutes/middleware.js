@@ -2,11 +2,10 @@
 const bodyParser = require("body-parser")
 const bcrypt = require("bcrypt")
 const jwt = require("jsonwebtoken")
+const config = require('config');
 
 // Local imports
 var sr = require('../../others/sendReturn');
-const constants = require('../../others/constants');
-
 
 
 
@@ -58,8 +57,6 @@ const middlewareSessionUser = (req, res, next) => {
         const users = require('../../models/usersModel');
         let user = new users();
         users.find({ token : token }, function (error, results) {
-            console.log("results  : ")
-            console.log(results)
             if (error) sr.sendReturn(res);
             else {
                 if (results === undefined || results.length == 0)
@@ -71,11 +68,9 @@ const middlewareSessionUser = (req, res, next) => {
                 else {
                     var success = true
                     try {
-                        var decoded = jwt.verify(token, constants.jwtSecretUser);
+                        var decoded = jwt.verify(token, config.get('Constants.jwtSecretUser'));
                     }
                     catch (e) {
-                        console.log("oh non 1")
-                        console.log(e)
                         success = false
                         sr.sendReturn(res, 401,
                             {
@@ -83,8 +78,6 @@ const middlewareSessionUser = (req, res, next) => {
                                 message: "Unauthorized"
                             });
                     }
-                    console.log("decoded : ")
-                    console.log(decoded)
                     if (success == true) {
                         if (results[0]._id != decoded._id) {
                             console.log("oh non 2")

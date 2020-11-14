@@ -20,7 +20,9 @@
     "bcrypt": "^5.0.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
+    "config": "^3.3.2",
     "cors": "^2.8.5",
+    "crypto": "^1.0.1",
     "eslint": "^7.13.0",
     "eslint-plugin-json": "^2.1.2",
     "express": "^4.17.1",
@@ -31,6 +33,7 @@
     "nodemailer": "^6.4.16",
     "nodemon": "^2.0.6",
     "pm2": "^4.5.0",
+    "randombytes": "^2.1.0",
     "salt": "^0.5.5",
     "supertest": "^6.0.1"
   }
