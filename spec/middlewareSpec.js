@@ -19,7 +19,7 @@ describe('Syntaxe middleware tests', () => {
     it('Test sending empty value', (done) => {
         request(API_URL)
             .post('/login')
-            .send('email=toto@email.com&password=')
+            .send('email=' + config.get('Constants.testUserEmail') + '&password=')
             .set('Accept', 'application/json')
             .expect(403, done)
     })
@@ -27,7 +27,7 @@ describe('Syntaxe middleware tests', () => {
     it('Test sending invalid email', (done) => {
         request(API_URL)
             .post('/login')
-            .send('email=totogmail.com&password=bonjour2')
+            .send('email=fauxemailemail.com&password=bonjour2')
             .set('Accept', 'application/json')
             .expect(403, done)
     })
@@ -40,7 +40,9 @@ describe('Session middleware tests', () => {
     it('Test without token', (done) => {
         request(API_URL)
             .put('/changePassword')
-            .send('email=toto@email.com&password=bonjour2&password2=bonjour3')
+            //.send('email=toto@email.com&password=bonjour&password2=bonjour2')
+            //console.log('email=' + config.get('Constants.testUserEmail') + '&password=' + config.get('Constants.testUserPwd') + '&password2=bonjour2')
+            .send('email=' + config.get('Constants.testUserEmail') + '&password=' + config.get('Constants.testUserPwd') + '&password2=bonjour2')
             .set('Accept', 'application/json')
             .expect(401, done)
     })
@@ -48,7 +50,7 @@ describe('Session middleware tests', () => {
     it('Test with invalid token', (done) => {
         request(API_URL)
             .put('/changePassword')
-            .send('email=toto@email.com&password=bonjour2&password2=bonjour3&token=tokeninvalide')
+            .send('email=' + config.get('Constants.testUserEmail') + '&password=' + config.get('Constants.testUserPwd') + '&password2=bonjour2$token=tokeninvalide')
             .set('Accept', 'application/json')
             .expect(401, done)
     })

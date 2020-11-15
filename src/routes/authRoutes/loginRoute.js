@@ -52,7 +52,6 @@ login.post("/login", (req, res) => {
                                         email: email
                                     });
                         });
-
                     }
                     else {
                         // Check if user try to use an temporary password

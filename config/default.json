@@ -1,5 +1,8 @@
 {
     "Constants": {
-        "jwtSecretUser": "aaaaa"
+        "jwtSecretUser": "HxKHseQVFzW8AtKAK5w9",
+        "testUserEmail": "",
+        "testUserPwd": "",
+        "testUser_id": ""
     }
 }

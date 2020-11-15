@@ -18,7 +18,7 @@ describe('Login / Logout tests', () => {
     it('Test if login with incorrect email works', (done) => {
         request(API_URL)
             .post('/login')
-            .send('email=toto2@email.com&password=bonjour2')
+            .send('email=tata@email.com&password=' + config.get('Constants.testUserPwd'))
             .set('Accept', 'application/json')
             .expect(401, done)
     })
@@ -26,7 +26,7 @@ describe('Login / Logout tests', () => {
     it('Test if login with incorrect password works', (done) => {
         request(API_URL)
             .post('/login')
-            .send('email=toto@email.com&password=bonjou2222')
+            .send('email=' + config.get('Constants.testUserEmail') + '&password=mdpfaux')
             .set('Accept', 'application/json')
             .expect(401, done)
     })
@@ -34,7 +34,7 @@ describe('Login / Logout tests', () => {
     it('Test if login with existing user works', (done) => {
         request(API_URL)
             .post('/login')
-            .send('email=toto@email.com&password=bonjour2')
+            .send('email=' + config.get('Constants.testUserEmail') + '&password=' + config.get('Constants.testUserPwd'))
             .set('Accept', 'application/json')
             .expect(200, done)
     })
@@ -42,15 +42,16 @@ describe('Login / Logout tests', () => {
     it('Test if logout work', (done) => {
         request(API_URL)
             .post('/login')
-            .send('email=toto@email.com&password=bonjour2')
+            .send('email=' + config.get('Constants.testUserEmail') + '&password=' + config.get('Constants.testUserPwd'))
             .set('Accept', 'application/json')
             .expect(200)
             .end(function (err, res) {
+                token = res.body.token
                 if (err) return done(err);
                 else {
                     request(API_URL)
                         .post('/logout')
-                        .send('token=' + res.body.token)
+                        .send('token=' + token)
                         .set('Accept', 'application/json')
                         .expect(200, done)
                 }
@@ -64,7 +65,7 @@ describe('Register tests', () => {
     it('Test register with an already existing mail', (done) => {
         request(API_URL)
             .post('/register')
-            .send('email=toto@email.com&password=bonjour2')
+            .send('email=' + config.get('Constants.testUserEmail') + '&password=' + config.get('Constants.testUserPwd'))
             .set('Accept', 'application/json')
             .expect(401, done)
     })
@@ -92,7 +93,7 @@ describe('Others auth related tests', () => {
     it('Test changing password with an incorrect password', (done) => {
         request(API_URL)
             .post('/login')
-            .send('email=toto@email.com&password=bonjour2')
+            .send('email=' + config.get('Constants.testUserEmail') + '&password=' + config.get('Constants.testUserPwd'))
             .set('Accept', 'application/json')
             .expect(200)
             .end(function (err, res) {
@@ -101,7 +102,7 @@ describe('Others auth related tests', () => {
                     token = res.body.token
                     request(API_URL)
                         .put('/changePassword')
-                        .send('email=toto@email.com&password=bonsoir&password2=bonjour3&token=' + token)
+                        .send('email=' + config.get('Constants.testUserEmail') + '&password=pasbonjour&password2=bonjour2' + '&token=' + token)
                         .set('Accept', 'application/json')
                         .expect(401, done)
                 }
@@ -111,7 +112,7 @@ describe('Others auth related tests', () => {
     it('Test if password change works', (done) => {
         request(API_URL)
             .post('/login')
-            .send('email=toto@email.com&password=bonjour2')
+            .send('email=' + config.get('Constants.testUserEmail') + '&password=' + config.get('Constants.testUserPwd'))
             .set('Accept', 'application/json')
             .expect(200)
             .end(function (err, res) {
@@ -121,7 +122,7 @@ describe('Others auth related tests', () => {
                     token = res.body.token
                     request(API_URL)
                         .put('/changePassword')
-                        .send('email=toto@email.com&password=bonjour2&password2=bonjour3&token=' + token)
+                        .send('email=' + config.get('Constants.testUserEmail') + '&password=' + config.get('Constants.testUserPwd') + '&password2=bonjour2' + '&token=' + token)
                         .set('Accept', 'application/json')
                         .expect(200)
                         .end(function (err2, res2) {
@@ -129,7 +130,7 @@ describe('Others auth related tests', () => {
                             else {
                                 request(API_URL)
                                     .put('/changePassword')
-                                    .send('email=toto@email.com&password=bonjour3&password2=bonjour2&token=' + token)
+                                    .send('email=' + config.get('Constants.testUserEmail') + '&password2=' + config.get('Constants.testUserPwd') + '&password=bonjour2' + '&token=' + token)
                                     .set('Accept', 'application/json')
                                     .expect(200, done)
                             }
@@ -137,6 +138,9 @@ describe('Others auth related tests', () => {
                 }
             })
     })
+
+
+    
 
 
     /*

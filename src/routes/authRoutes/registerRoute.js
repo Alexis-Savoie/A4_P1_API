@@ -48,9 +48,9 @@ register.get("/users", (req, res) => {
     .exec()
     .then(Users => res.status(200).json(Users))
     .catch(err =>
-      res.status(500).json({
-        message: "users not found - :(",
-        error: err
+      sr.sendReturn(res, 404, {
+        error: false,
+        message: "users not found - :("
       })
     )
 })
@@ -61,9 +61,9 @@ register.get("/users/:id", (req, res) => {
     .findById(id)
     .then(Users => res.status(200).json(Users))
     .catch(err =>
-      res.status(500).json({
-        message: `User  with id ${id} not found`,
-        error: err
+      sr.sendReturn(res, 404, {
+        error: false,
+        message: `User  with id ${id} not found`
       })
     )
 })
