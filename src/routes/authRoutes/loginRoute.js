@@ -31,7 +31,6 @@ login.post("/login", (req, res) => {
                         message: "Incorrect username/password"
                     });
 
-
             // if it's a existing username then check password 
             else {
                 bcrypt.compare(req.body.password, results[0].password).then(isOk => {
@@ -40,14 +39,9 @@ login.post("/login", (req, res) => {
                         var token = jwt.sign({ _id: results[0]._id }, config.get('Constants.jwtSecretUser'), {
                             algorithm: "HS256"
                         })
-                        //Update token
-                        let insertData =
-                        {
-                            token: token,
-                        };
 
                         email = results[0].email;
-                        users.findOneAndUpdate({ _id: results[0]._id }, { token: token }, { upsert: true }, function (err, doc) {
+                        users.findOneAndUpdate({ _id: results[0]._id }, { token: token }, { upsert: true }, function (error, results) {
                             if (error) sr.sendReturn(res);
                             else
                                 sr.sendReturn(res, 200,
@@ -61,15 +55,57 @@ login.post("/login", (req, res) => {
 
                     }
                     else {
-                        if (results[0].password != "")
-                        {
+                        // Check if user try to use an temporary password
+                        if (results[0].temporary_password != undefined && results[0].temporary_password != "") {
+                            bcrypt.compare(req.body.password, results[0].temporary_password).then(isOk => {
+                                if (isOk) {
+                                    //Version that never expire
+                                    var token = jwt.sign({ _id: results[0]._id }, config.get('Constants.jwtSecretUser'), {
+                                        algorithm: "HS256"
+                                    })
 
+                                    email = results[0].email;
+                                    _id = results[0]._id;
+                                    // Generate token and overwrite password with temporary password (and delete temporary_password field)
+                                    // Generate token
+                                    users.findOneAndUpdate({ _id: _id }, { token: token }, { upsert: true }, function (error, results) {
+                                        if (error) sr.sendReturn(res);
+                                        else {
+                                            // Replace old password with temporary password
+                                            users.findOneAndUpdate({ _id: _id }, { password: req.body.password }, { upsert: true }, function (error, results) {
+                                                if (error) sr.sendReturn(res);
+                                                else {
+                                                    users.findOneAndUpdate({ _id: _id }, { token: token }, { upsert: true }, function (error, results) {
+                                                        if (error) sr.sendReturn(res);
+                                                        else {
+                                                            // Remove temporary password field
+                                                            users.findOneAndUpdate({ _id: _id }, { temporary_password: "" }, { upsert: true }, function (error, results) {
+                                                                if (error) sr.sendReturn(res);
+                                                                else {
+                                                                    sr.sendReturn(res, 200,
+                                                                        {
+                                                                            error: false,
+                                                                            message: "login successful (temporary password)",
+                                                                            token: token,
+                                                                            email: email
+                                                                        });
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }
+                                    });
+                                }
+                            })
                         }
-                        sr.sendReturn(res, 401,
-                            {
-                                error: true,
-                                message: "Incorrect username/password"
-                            });
+                        else
+                            sr.sendReturn(res, 401,
+                                {
+                                    error: true,
+                                    message: "Incorrect username/password"
+                                });
                     }
                 });
             }
@@ -102,8 +138,3 @@ login.post("/logout", middleware.middlewareSessionUser, (req, res) => {
 
 
 module.exports = login;
-
-
-
-
-
