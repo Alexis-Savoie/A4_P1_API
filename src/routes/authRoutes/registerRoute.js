@@ -46,12 +46,7 @@ register.get("/users", (req, res) => {
     .sort({ createdOn: -1 })
     .exec()
     .then(Users => res.status(200).json(Users))
-    .catch(err =>
-      res.status(500).json({
-        message: "users not found - :(",
-        error: err
-      })
-    )
+    .catch(err => sr.sendReturn(res))
 })
 
 register.get("/users/:id", (req, res) => {
@@ -66,5 +61,7 @@ register.get("/users/:id", (req, res) => {
       })
     )
 })
+
+//#endregion
 
 module.exports = register
