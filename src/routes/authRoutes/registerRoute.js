@@ -38,30 +38,6 @@ register.post("/register", (req, res) => {
   })
 })
 
-register.get("/users", (req, res) => {
-  // to see if req.user exists right after registration or login
-  console.log("req.user", req.users)
-  users
-    .find()
-    .sort({ createdOn: -1 })
-    .exec()
-    .then(Users => res.status(200).json(Users))
-    .catch(err => sr.sendReturn(res))
-})
-
-register.get("/users/:id", (req, res) => {
-  const id = req.params._id
-  users
-    .findById(id)
-    .then(Users => res.status(200).json(Users))
-    .catch(err =>
-      res.status(500).json({
-        message: `User  with id ${id} not found`,
-        error: err
-      })
-    )
-})
-
 //#endregion
 
 module.exports = register
