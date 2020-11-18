@@ -10,7 +10,7 @@ else
 API_URL = "http://localhost:8020"
 //console.log("ENVIRONMENT PROD : " + config.get('Constants.isProd'))
 
-console.log("API_URL : " + API_URL)
+// console.log("API_URL : " + API_URL)
 
 
 describe('Login / Logout tests', () => {

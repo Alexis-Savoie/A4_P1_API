@@ -7,7 +7,7 @@ resetPass = require("./authRoutes/resetpasswordRoute")
 routes = require("express").Router()
 const path = require("path")
 
-//routes.use('/login', login);
+
 routes.use("/", other)
 routes.use("/", login)
 routes.use("/", register)
