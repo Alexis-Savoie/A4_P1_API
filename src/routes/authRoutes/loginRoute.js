@@ -86,7 +86,7 @@ login.post("/login", (req, res) => {
                             }
                             else {
                                 // Check number of tries and add one or change cooldown
-                                if (results[0].nbTry >= 3) {
+                                if (results[0].nbTry >= 2) {
                                     var oldDateObj = new Date();
                                     var newDateObj = new Date();
                                     newDateObj.setTime(oldDateObj.getTime() + (5 * 60 * 1000));

@@ -9,6 +9,11 @@ else
 */
 
 API_URL = "http://localhost:8020"
+
+console.log("checking...")
+console.log(config.get('Constants.isProd'))
+console.log(config.get('Constants.testUserEmail'))
+console.log(config.get('Constants.testUserPwd'))
 //console.log("ENVIRONMENT PROD : " + config.get('Constants.isProd'))
 
 //console.log("API_URL : " + API_URL)

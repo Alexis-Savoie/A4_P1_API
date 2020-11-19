@@ -16,7 +16,7 @@ register.post("/register", (req, res) => {
     if (error) {
       console.log(error)
     } else {
-      if (results.length == 1)
+      if (results.length > 0)
         sr.sendReturn(res, 401, {
           error: false,
           message: "User already exists"

@@ -1,8 +1,13 @@
 {
     "Constants": {
-        "jwtSecretUser": "HxKHseQVFzW8AtKAK5w9",
+        "isProd" : false,
+        "jwtSecretUser": "default",
+        "adminKey": "default",
+        
         "testUserEmail": "",
         "testUserPwd": "",
-        "testUser_id": ""
+
+        "testUserITryEmail" : "",
+        "testUserITryPwd" : ""
     }
 }
