@@ -13,17 +13,16 @@ forgotPass.post("/sendTemporairePassword", (req, res) => {
   let user = new users()
   //console.log(req.body)
   users.find({ email: req.body.email }, function(error, results) {
-    // SQL error case
-    if (error) sr.sendReturn(res)
-    //if no results then id does not exist
-    else {
-      if (results === undefined || results.length == 0) {
+    if (error) {
+      console.log(error)
+    } else {
+      if (results.length == 1)
         sr.sendReturn(res, 401, {
-          error: true,
-          message: "user does not exists"
+          error: false,
+          message: "User already exists"
         })
-      }
     }
+
     let user = req.body
     sendMail(user, info => {
       console.log(`The mail has beed send 😃 and the id is ${info._id}`)

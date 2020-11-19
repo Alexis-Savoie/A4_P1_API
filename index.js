@@ -1,7 +1,7 @@
 const express = require("express") // Chargement Express
 const bodyParser = require("body-parser")
 const app = express() // Instance Express
-
+const morgan = require("morgan")
 global.bdd = require("./src/models/indexModel")
 const route = require("./src/routes/indexRoute")
 
@@ -42,5 +42,9 @@ app.use(bodyParser.json())
 app.use("/", middleware.middleware)
 app.use(route)
 
+if (app.get("env") === "developement") {
+  app.use(morgan("tiny"))
+  console.log("Morgan inabled")
+}
 // Run serve
 app.listen(port, () => console.log(`listening on http://localhost:${port}`))
