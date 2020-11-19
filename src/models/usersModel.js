@@ -10,6 +10,7 @@ const Users = new Schema({
         type: String,
         required: true,
         lowercase: true,
+        unique: true,
     },
 
     password: {
@@ -26,6 +27,18 @@ const Users = new Schema({
     temporary_password: {
         index: true,
         type: String,
+    },
+
+    nbTry: {
+        index: true,
+        type: Number,
+        default: 0
+    },
+
+    cooldownDate: {
+        index: true,
+        type: Date,
+        default: Date.parse('01 Jan 1970 00:00:00')
     },
 
 }, { timestamps: true })

@@ -13,6 +13,7 @@ API_URL = "http://localhost:8020"
 // console.log("API_URL : " + API_URL)
 
 
+
 describe('Login / Logout tests', () => {
 
     it('Test if login with incorrect email works', (done) => {
@@ -57,6 +58,102 @@ describe('Login / Logout tests', () => {
                 }
             })
     })
+
+    // Test limited attempt
+    
+    it('Test user attempt reset (admin)', (done) => {
+        request(API_URL)
+            .post('/resetUserTry')
+            .send('email=' + config.get('Constants.testUserEmail') + '&adminKey=' + config.get('Constants.adminKey'))
+            .set('Accept', 'application/json')
+            .expect(200, done)
+
+    })
+
+
+    it('Test if limited attempt works', (done) => {
+        request(API_URL)
+            .post('/login')
+            .send('email=' + config.get('Constants.testUserEmail') + '&password=pasbonjour')
+            .set('Accept', 'application/json')
+            .expect(401)
+            .end(function (err, res) {
+                token = res.body.token
+                if (err) return done(err);
+                else {
+                    request(API_URL)
+                    .post('/login')
+                    .send('email=' + config.get('Constants.testUserEmail') + '&password=pasbonjour')
+                    .set('Accept', 'application/json')
+                    .expect(401)
+                    .end(function (err, res) {
+                        token = res.body.token
+                        if (err) return done(err);
+                        else {
+                            request(API_URL)
+                            .post('/login')
+                            .send('email=' + config.get('Constants.testUserEmail') + '&password=pasbonjour')
+                            .set('Accept', 'application/json')
+                            .expect({error: true, message: 'Too many failed attempt you are now blocked for some time'})
+                            .end(function (err, res) {
+                                token = res.body.token
+                                if (err) return done(err);
+                                else {
+                                    request(API_URL)
+                                    .post('/resetUserTry')
+                                    .send('email=' + config.get('Constants.testUserEmail') + '&adminKey=' + config.get('Constants.adminKey'))
+                                    .set('Accept', 'application/json')
+                                    .expect(200, done)
+                                }
+                            })
+                        }
+                    })
+                }
+            })
+    })
+
+        it('Test if limited attempt stop increment', (done) => {
+            request(API_URL)
+                .post('/login')
+                .send('email=' + config.get('Constants.testUserEmail') + '&password=pasbonjour')
+                .set('Accept', 'application/json')
+                .expect(401)
+                .end(function (err, res) {
+                    token = res.body.token
+                    if (err) return done(err);
+                    else {
+                        request(API_URL)
+                        .post('/login')
+                        .send('email=' + config.get('Constants.testUserEmail') + '&password=pasbonjour')
+                        .set('Accept', 'application/json')
+                        .expect(401)
+                        .end(function (err, res) {
+                            token = res.body.token
+                            if (err) return done(err);
+                            else {
+                                request(API_URL)
+                                .post('/login')
+                                .send('email=' + config.get('Constants.testUserEmail') + '&password=' + config.get('Constants.testUserPwd'))
+                                .set('Accept', 'application/json')
+                                .expect(200, done)
+
+                            }
+                        })
+                    }
+                })
+        })
+
+
+        it('Test user attempt reset (admin) pt2', (done) => {
+            request(API_URL)
+                .post('/resetUserTry')
+                .send('email=' + config.get('Constants.testUserEmail') + '&adminKey=' + config.get('Constants.adminKey'))
+                .set('Accept', 'application/json')
+                .expect(200, done)
+    
+        })
+    
+
 })
 
 
@@ -68,6 +165,7 @@ describe('Register tests', () => {
             .send('email=' + config.get('Constants.testUserEmail') + '&password=' + config.get('Constants.testUserPwd'))
             .set('Accept', 'application/json')
             .expect(401, done)
+
     })
 
     /*

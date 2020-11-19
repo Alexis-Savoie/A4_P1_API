@@ -1,6 +1,9 @@
+// set NODE_ENV=production
+
 const express = require("express") // Chargement Express
 const bodyParser = require("body-parser")
 const app = express() // Instance Express
+const config = require('config');
 
 global.bdd = require("./src/models/indexModel")
 const route = require("./src/routes/indexRoute")
@@ -44,3 +47,5 @@ app.use(route)
 
 // Run serve
 app.listen(port, () => console.log(`listening on http://localhost:${port}`))
+
+console.log("isPeod : " + config.get('Constants.isProd'))
