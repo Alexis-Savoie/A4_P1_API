@@ -5,9 +5,7 @@
         "adminKey": "default",
         
         "testUserEmail": "",
-        "testUserPwd": "",
+        "testUserPwd": ""
 
-        "testUserITryEmail" : "",
-        "testUserITryPwd" : ""
     }
 }
