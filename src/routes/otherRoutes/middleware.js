@@ -81,16 +81,7 @@ const middlewareSessionUser = (req, res, next) => {
                             });
                     }
                     if (success == true) {
-                        if (results[0]._id != decoded._id) {
-                            sr.sendReturn(res, 401,
-                                {
-                                    error: true,
-                                    message: "Unauthorized"
-                                });
-                        }
-                        else {
-                            next();
-                        }
+                        next();
                     }
                 }
             }

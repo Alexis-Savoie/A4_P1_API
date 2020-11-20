@@ -1,7 +1,10 @@
+// set NODE_ENV=production
+
 const express = require("express") // Chargement Express
 const bodyParser = require("body-parser")
 const app = express() // Instance Express
-const morgan = require("morgan")
+const config = require("config")
+
 global.bdd = require("./src/models/indexModel")
 const route = require("./src/routes/indexRoute")
 
@@ -48,3 +51,5 @@ if (app.get("env") === "developement") {
 }
 // Run serve
 app.listen(port, () => console.log(`listening on http://localhost:${port}`))
+
+console.log("isPeod : " + config.get("Constants.isProd"))
