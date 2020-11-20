@@ -2,7 +2,6 @@ login = require("./authRoutes/loginRoute")
 other = require("./otherRoutes/otherRoute")
 changePassword = require("./otherRoutes/changePassword")
 register = require("./authRoutes/registerRoute")
-resetPass = require("./authRoutes/resetpasswordRoute")
 forgotPass = require("./authRoutes/fortgotPass")
 adminAuth = require("./adminRoutes/adminAuthRoute")
 

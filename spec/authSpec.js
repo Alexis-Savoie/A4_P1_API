@@ -157,31 +157,6 @@ describe('Login / Logout tests', () => {
 })
 
 
-describe('Register tests', () => {
-
-    it('Test register with an already existing mail', (done) => {
-        request(API_URL)
-            .post('/register')
-            .send('email=' + config.get('Constants.testUserEmail') + '&password=' + config.get('Constants.testUserPwd'))
-            .set('Accept', 'application/json')
-            .expect(401, done)
-
-    })
-
-    /*
-    it('Test if trying to register an user works', (done) => {
-        request(API_URL)
-            .post('/register')
-            .send('email=tata@email.com&password=bonjour')
-            .set('Accept', 'application/json')
-            .expect(201, done)
-    })
-    */
-
-
-
-
-})
 
 
 describe('Others auth related tests', () => {

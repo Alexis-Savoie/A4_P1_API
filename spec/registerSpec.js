@@ -13,19 +13,14 @@ API_URL = "http://localhost:8020"
 console.log("API_URL : " + API_URL)
 
 describe("Register tests", () => {
-  it("Test register with an already existing mail", done => {
-    request(API_URL)
-      .post("/register")
-      .send("email=" + config.get("Constants.testUserEmail") + "&password=" + config.get("Constants.testUserPwd"))
-      .set("Accept", "application/json")
-      .expect(401, done)
-  })
 
-  it("Test if register with existing email works", done => {
+  it('Test register with an already existing mail', (done) => {
     request(API_URL)
-      .post("/register")
-      .send("email=" + config.get("Constants.testUserEmail") + "&password=" + config.get("Constants.testUserPwd"))
-      .set("Accept", "application/json")
-      .expect(200, done)
-  })
+        .post('/register')
+        .send('email=' + config.get('Constants.testUserEmail') + '&password=' + config.get('Constants.testUserPwd'))
+        .set('Accept', 'application/json')
+        .expect(401, done)
+
+})
+
 })

@@ -7,7 +7,7 @@ const users = require("../../models/usersModel")
 const forgotPass = require("express").Router()
 
 //#region change user password route
-forgotPass.post("/sendTemporairePassword", (req, res) => {
+forgotPass.post("/sendTemporaryPassword", (req, res) => {
   // check if an user is registered with this username
   const users = require("../../models/usersModel")
   const sr = require("../../others/sendReturn")
