@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/Alexis-Savoie/A4_P1_API#readme",
   "dependencies": {
+    "@sendgrid/mail": "^7.4.0",
     "bcrypt": "^5.0.0",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
@@ -30,6 +31,7 @@
     "jshint": "^2.12.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.10.13",
+    "morgan": "^1.10.0",
     "nodemailer": "^6.4.16",
     "nodemon": "^2.0.6",
     "pm2": "^4.5.0",
