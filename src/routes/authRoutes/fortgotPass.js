@@ -1,101 +1,60 @@
 const nodemailer = require("nodemailer")
 const mongoose = require("mongoose")
 const bodyParser = require("body-parser")
-// Local imports
+const bcrypt = require("bcrypt")
 let sr = require("../../others/sendReturn")
 const users = require("../../models/usersModel")
 const forgotPass = require("express").Router()
 
 //#region change user password route
-forgotPass.post("/sendTemporaryPassword", (req, res) => {
+forgotPass.post("/sendTemporairePassword", async (req, res) => {
+  const user = req.body.email
   // check if an user is registered with this username
   const users = require("../../models/usersModel")
   const sr = require("../../others/sendReturn")
-  users.find({ email: req.body.email }).then(user => {
-    if (!user) {
-      return res.status(422).json({ error: "User dont exist with that email adress" })
-    }
-
-    user.temporary_password = "ZAKl1@6AJS43714GZ/"
-    sendMail(user, info => {
-      console.log("The mail has beed send 😃 ")
-      res.send(info)
-    })
-
-    async function sendMail(user, callback) {
-      // let testAccount = await nodemailer.createTestAccount()
-      // create reusable transporter object using the default SMTP transport
-      let transporter = nodemailer.createTransport({
-        host: "smtp.ethereal.email",
-        port: 587,
-        secure: false, // true for 465, false for other ports
-        auth: {
-          user: user.email, // generated ethereal user
-          pass: user.temporary_password // generated ethereal password
-        }
+  const salt = bcrypt.genSaltSync(10)
+  users.findOneAndUpdate({ email: req.body.email }, { temporary_password: bcrypt.hashSync("ZAKl1@6AJS43714GZ/", salt) }, { upsert: true }, function (err, doc) {
+    if (err) sr.sendReturn(res)
+    else
+      sr.sendReturn(res, 200, {
+        error: false,
+        message: "login successful",
+        email: users.email
       })
-
-      let mailOptions = {
-        from: '"Fun Of Heuristic"<example.gimail.com>', // sender address
-        to: user.email, // list of receivers
-        subject: "Temporary password 👻", // Subject line
-        text: "Hello world?", // plain text body
-        html: "<b>Hello world?</b>" // html body
-      }
-
-      let info = transporter.sendMail(mailOptions)
-
-      callback(info)
-    }
-
-    // transporter.sendMail({
-    //   to: user.email,
-    //   from: "no-replay@gmail.com",
-    //   subject: "Mot de passe temporaire"
-    // })
   })
-  //console.log(req.body)
+
+
+  let transporter = nodemailer.createTransport({
+    host: "smtp.ethereal.email",
+    port: 587,
+    secure: false, // true for 465, false for other ports
+    auth: {
+      user: 'lue56@ethereal.email',
+      pass: '2n53Ds3UJZ8DVXGk87'
+    },
+
+    tls: {
+      rejectUnauthorized: false
+    }
+  });
+
+  const msg = {
+    from: '"Fred Foo 👻" <lue56@ethereal.email>', // sender address
+    to: users.email, // list of receivers
+    subject: "Voici votre mot de passe temporaire", // Subject line
+    text: "ZAKl1@6AJS43714GZ/", // plain text body
+
+  }
+  // send mail with defined transport object
+  let info = await transporter.sendMail(msg);
+
+  console.log("Message sent: %s", info.messageId);
+
+  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+  res.send("Email sent")
+
+
+
 })
 
 module.exports = forgotPass
-
-// users.find({ email: req.body.email }, function(error, results) {
-//   if (error) {
-//     console.log(error)
-//   } else {
-//     if (results.length == 1)
-//       sr.sendReturn(res, 401, {
-//         error: false,
-//         message: "User already exists"
-//       })
-//   }
-
-//   let users = req.body
-//   sendMail(users, info => {
-//     console.log(`The mail has beed send 😃 and the email is ${info.email}`)
-//     res.send(info)
-//   })
-
-//   async function sendMail(users, callback) {
-//     // create reusable transporter object using the default SMTP transport
-//     let transporter = nodemailer.createTransport({
-//       host: "smtp.gmail.com",
-//       port: 587,
-//       secure: false, // true for 465, false for other ports
-//       auth: {
-//         user: users.email,
-//         pass: "hajaj12/?idjk"
-//       }
-//     })
-
-//     let mailOptions = {
-//       from: '"Fun Of Heuristic"<example.gimail.com>', // sender address
-//       to: users.email, // list of receivers
-//       subject: "Temporary password 👻" // Subject line
-//     }
-
-//     let info = transporter.sendMail(mailOptions)
-
-//     callback(info)
-//   }
-// })
