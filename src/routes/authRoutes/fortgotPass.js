@@ -7,54 +7,64 @@ const users = require("../../models/usersModel")
 const forgotPass = require("express").Router()
 
 //#region change user password route
-forgotPass.post("/sendTemporairePassword", async (req, res) => {
-  const user = req.body.email
+forgotPass.post("/sendTemporairePassword", (req, res) => {
   // check if an user is registered with this username
   const users = require("../../models/usersModel")
   const sr = require("../../others/sendReturn")
-  const salt = bcrypt.genSaltSync(10)
-  users.findOneAndUpdate({ email: req.body.email }, { temporary_password: bcrypt.hashSync("ZAKl1@6AJS43714GZ/", salt) }, { upsert: true }, function (err, doc) {
-    if (err) sr.sendReturn(res)
+
+  users.findOneAndUpdate({ email: req.body.email }, { temporary_password: "ZAKl1@6AJS43714GZ/" }, { upsert: true }, function (error, doc) {
+    if (error) sr.sendReturn(res)
     else
       sr.sendReturn(res, 200, {
         error: false,
         message: "login successful",
-        email: users.email
+
       })
   })
 
 
-  let transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: 'lue56@ethereal.email',
-      pass: '2n53Ds3UJZ8DVXGk87'
-    },
 
-    tls: {
-      rejectUnauthorized: false
+  users.find({ email: req.body.email }).then(user => {
+    if (!user) {
+      return res.status(422).json({ error: "User dont exist with that email adress" })
     }
-  });
 
-  const msg = {
-    from: '"Fred Foo 👻" <lue56@ethereal.email>', // sender address
-    to: users.email, // list of receivers
-    subject: "Voici votre mot de passe temporaire", // Subject line
-    text: "ZAKl1@6AJS43714GZ/", // plain text body
-
-  }
-  // send mail with defined transport object
-  let info = await transporter.sendMail(msg);
-
-  console.log("Message sent: %s", info.messageId);
-
-  console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-  res.send("Email sent")
+    users.temporary_password = "ZAKl1@6AJS43714GZ/"
+    // sendMail(user, info => {
+    //   console.log("The mail has beed send 😃 ")
+    //   res.send(info)
+    // })
 
 
+    // let testAccount = await nodemailer.createTestAccount()
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: 'joeltest047@gmail.com', // TODO: your gmail account
+        pass: 'Test@!2020' // TODO: your gmail password
+      }
+    });
 
+
+    let mailOptions = {
+      from: 'joeltest047@gmail.com', // TODO: email sender
+      to: 'joeltest047@gmail.com', // TODO: email receiver
+      subject: "Temporary password 👻", // Subject line
+      text: "Voici votre mote de passe temporaire: ZAKl1@6AJS43714GZ/",
+    };
+
+    transporter.sendMail(mailOptions, function (err, data) {
+      if (err) {
+        console.log(err)
+      } else {
+        console.log("Emeil sent!!!")
+      }
+    })
+
+
+  })
+  //console.log(req.body)
 })
 
 module.exports = forgotPass
