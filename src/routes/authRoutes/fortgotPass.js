@@ -1,14 +1,11 @@
 const nodemailer = require("nodemailer")
-const mongoose = require("mongoose")
-const bodyParser = require("body-parser")
-const bcrypt = require("bcrypt")
+require('dotenv').config();
 let sr = require("../../others/sendReturn")
 const users = require("../../models/usersModel")
 const forgotPass = require("express").Router()
 
-//#region change user password route
 forgotPass.post("/sendTemporairePassword", (req, res) => {
-  // check if an user is registered with this username
+
   const users = require("../../models/usersModel")
   const sr = require("../../others/sendReturn")
 
@@ -30,19 +27,12 @@ forgotPass.post("/sendTemporairePassword", (req, res) => {
     }
 
     users.temporary_password = "ZAKl1@6AJS43714GZ/"
-    // sendMail(user, info => {
-    //   console.log("The mail has beed send 😃 ")
-    //   res.send(info)
-    // })
 
-
-    // let testAccount = await nodemailer.createTestAccount()
-    // create reusable transporter object using the default SMTP transport
     let transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'joeltest047@gmail.com', // TODO: your gmail account
-        pass: 'Test@!2020' // TODO: your gmail password
+        user: process.env.EMAIL,
+        pass: process.env.PASSWORD
       }
     });
 
@@ -64,7 +54,7 @@ forgotPass.post("/sendTemporairePassword", (req, res) => {
 
 
   })
-  //console.log(req.body)
+
 })
 
 module.exports = forgotPass

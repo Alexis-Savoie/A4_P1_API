@@ -2,4 +2,5 @@
 node_modules
 package-lock.json
 production.json
+.env
 /config/production.json
