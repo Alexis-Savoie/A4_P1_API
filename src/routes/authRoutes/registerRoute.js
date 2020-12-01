@@ -12,7 +12,7 @@ const register = require("express").Router()
 register.post("/register", (req, res) => {
   const users = require("../../models/usersModel")
 
-  users.find({ email: req.body.email }, function(error, results) {
+  users.find({ email: req.body.email }, function (error, results) {
     if (error) {
       console.log(error)
     } else {
