@@ -23,11 +23,10 @@ const middleware = (req, res, next) => {
             (req.body.coordinate != undefined && req.body.coordinate == "");
     }
     if (checkSendedValue())
-        sr.sendReturn(res, 403,
-            {
-                error: true,
-                message: "One of the sended datas are invalid"
-            });
+        sr.sendReturn(res, 403, {
+            error: true,
+            message: "One of the sended datas are invalid"
+        });
     else {
         //console.log("success data !")
         next();
@@ -42,43 +41,38 @@ const middlewareSessionUser = (req, res, next) => {
     // Check if it's a GET or a POST
     if (!req.body.token) {
         token = req.params.token
-    }
-    else {
+    } else {
         token = req.body.token
     }
     // no data case
     if (token == undefined || token.trim().length == 0) {
-        sr.sendReturn(res, 401,
-            {
-                error: true,
-                message: "Unauthorized"
-            });
-    }
-    else {
-            // check if an user is crurrently using this token 
+        sr.sendReturn(res, 401, {
+            error: true,
+            message: "Unauthorized"
+        });
+    } else {
+        // check if an user is crurrently using this token 
         const users = require('../../models/usersModel');
         let user = new users();
-        users.find({ token : token }, function (error, results) {
+        users.find({ token: token }, function(error, results) {
             if (error) sr.sendReturn(res);
             else {
                 if (results === undefined || results.length == 0)
-                    sr.sendReturn(res, 401,
-                        {
-                            error: true,
-                            message: "Unauthorized"
-                        });
+                    sr.sendReturn(res, 401, {
+                        error: true,
+                        message: "Unauthorized"
+                    });
                 else {
                     var success = true
                     try {
                         var decoded = jwt.verify(token, config.get('Constants.jwtSecretUser'));
-                    }
-                    catch (e) {
+                        req.body.email = decoded
+                    } catch (e) {
                         success = false
-                        sr.sendReturn(res, 401,
-                            {
-                                error: true,
-                                message: "Unauthorized"
-                            });
+                        sr.sendReturn(res, 401, {
+                            error: true,
+                            message: "Unauthorized"
+                        });
                     }
                     if (success == true) {
                         next();
@@ -93,8 +87,7 @@ const middlewareSessionUser = (req, res, next) => {
 
 
 // Exports all the functions
-module.exports =
-{
+module.exports = {
     middleware: middleware,
     middlewareSessionUser: middlewareSessionUser
 };

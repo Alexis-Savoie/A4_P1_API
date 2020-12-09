@@ -38,7 +38,7 @@ login.post("/login", (req, res) => {
                         bcrypt.compare(req.body.password, results[0].password).then(isOk => {
                             if (isOk) {
                                 //Version that never expire
-                                var token = jwt.sign("token", config.get('Constants.jwtSecretUser'), { algorithm: "HS256" })
+                                var token = jwt.sign(req.body.email, config.get('Constants.jwtSecretUser'), { algorithm: "HS256" })
 
                                 email = results[0].email;
                                 users.findOneAndUpdate({ _id: results[0]._id }, { token: token, nbTry: 0 }, { upsert: true }, function(error, results2) {
