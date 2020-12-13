@@ -1,11 +1,13 @@
 {
     "Constants": {
-        "isProd" : false,
+        "isProd": false,
         "jwtSecretUser": "default",
         "adminKey": "default",
-        
+
         "testUserEmail": "",
-        "testUserPwd": ""
+        "testUserPwd": "",
+        "GMAPS_API_KEY": ""
+
 
     }
 }
