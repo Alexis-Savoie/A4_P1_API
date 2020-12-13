@@ -92,7 +92,8 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
 
                     // Store the duration
                     listDuration.push(totalTime)
-
+                    console.log(totalTime)
+                    console.log(routes[i][0])
 
                     // Find fastest itinerary
                     let index = 0;
@@ -105,9 +106,9 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
                     }
 
                     // Save itinerary for the API response
-                    order = routes[index][0].toString() + "|" + routes[index][1].toString()
+                    wp = routes[index][0].toString() + "|" + routes[index][1].toString()
                     shortestRoute = resRoutes[index]
-                    console.log(order)
+
 
 
                 }
@@ -131,7 +132,7 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
             sr.sendReturn(res, 200, {
                 error: false,
                 message: "Shortest route found",
-                order: order,
+                wp: wp,
                 route: shortestRoute
             });
         }
