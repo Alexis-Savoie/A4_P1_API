@@ -1,7 +1,7 @@
 // External packages
 const bcrypt = require("bcrypt")
 const mongoose = require("mongoose")
-
+const config = require('config');
 // Local imports
 let sr = require("../../others/sendReturn")
 const users = require("../../models/usersModel")
@@ -38,5 +38,37 @@ register.post("/register", (req, res) => {
     }
   })
 })
+
+register.get('/user/:id', (req, res) => {
+  users.findById(req.params._id, (err, doc) => {
+    if (!err) {
+      console.log("success", "user found")
+      // res.redirect('');
+    }
+    else { console.log(' User not found: ' + err); }
+  });
+});
+
+register.delete("/user/delete/:id", (req, res) => {
+  if (req.body.adminKey != config.get('Constants.adminKey')) {
+    sr.sendReturn(res, 401,
+      {
+        error: true,
+        message: "Unauthorized"
+      });
+  } else {
+    users.delete(req.params._id, (err, doc) => {
+      if (!err) {
+        console.log("success", "Post successfully deleted.")
+        // res.redirect('');
+      }
+      else { console.log('Failed to Delete User: ' + err); }
+    });
+  }
+})
+
+
+
+
 
 module.exports = register
