@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken")
 const config = require('config');
 const https = require('https')
 const axios = require('axios');
+const { Client } = require("@googlemaps/google-maps-services-js");
 
 // Local imports
 const middleware = require("../otherRoutes/middleware")
@@ -61,10 +62,11 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
         let success = true
         for (let i = 0; i < routes.length; i++) {
 
+
             // MAke the request and wait for the response
             let res2 = await httpRequest(origin, routes[i][1], key, routes[i][0])
 
-            console.log(res2.status)
+            //console.log(res2.status)
 
             // INvalid adress case
             if (res2.data.status == "NOT_FOUND" && success == true) {
@@ -110,6 +112,22 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
                     shortestRoute = resRoutes[index]
 
 
+                    // Add manually the request object of the response, that we normally get through Directions Services
+                    let wp3 = []
+                    let wp2 = routes[index][0].split('|')
+
+                    for (let k = 0; k < wp2.length; k++) {
+                        wp3.push({
+                            location: { query: wp2[k] },
+                            stopover: true,
+                        });
+                    }
+
+
+                    waypoints = wp3
+                    destination = routes[index][1]
+
+
 
                 }
                 // Failure case
@@ -129,6 +147,28 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
 
         }
         if (success == true) {
+
+
+
+
+
+            let request = {
+                destination: { query: destination },
+                origin: { query: origin },
+
+                waypoints: waypoints,
+                optimizeWaypoints: true,
+
+                //region: "FR",
+                //language: "fr",
+
+                travelMode: "DRIVING",
+
+            }
+            console.log("request : ")
+            console.log(request)
+            shortestRoute.request = request;
+
             sr.sendReturn(res, 200, {
                 error: false,
                 message: "Shortest route found",

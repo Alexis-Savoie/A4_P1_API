@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/Alexis-Savoie/A4_P1_API#readme",
   "dependencies": {
+    "@google/maps": "^1.1.3",
+    "@googlemaps/google-maps-services-js": "^3.1.13",
     "@sendgrid/mail": "^7.4.0",
     "axios": "^0.19.2",
     "bcrypt": "^5.0.0",
@@ -30,6 +32,7 @@
     "eslint-plugin-json": "^2.1.2",
     "express": "^4.17.1",
     "generate-password": "^1.5.1",
+    "googlemaps": "^1.12.0",
     "jasmine": "^3.6.3",
     "jshint": "^2.12.0",
     "jsonwebtoken": "^8.5.1",

@@ -8,7 +8,7 @@ const forgotPass = require("express").Router()
 
 forgotPass.post("/sendTemporaryPassword", (req, res) => {
 
-
+    console.log("sendTemporaryPassword")
     const users = require("../../models/usersModel")
     const sr = require("../../others/sendReturn")
 
