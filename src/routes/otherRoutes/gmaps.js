@@ -17,15 +17,12 @@ const gmaps = require("express").Router()
 //#region Get shortest itinery for a set of steps
 gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUser, async(req, res) => {
         // Get request params
-        const origin = req.params.origin;
+        let origin = req.params.origin;
         let dests = req.params.waypoints.split('|');
+        let wp4 = []
 
         // Prepare request
         const key = config.get('Constants.GMAPS_API_KEY')
-
-
-
-
 
         // Create an array of every possible destinations, and then rely on google waypoints optimization to get the fatest route possible
         routes = []
@@ -45,9 +42,7 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
 
         resRoutes = []
         listDuration = []
-
-
-        //console.log(routes)
+            //console.log(routes)
 
 
         // We need to made the request async to properly wait for the request response
@@ -61,8 +56,6 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
 
         let success = true
         for (let i = 0; i < routes.length; i++) {
-
-
             // MAke the request and wait for the response
             let res2 = await httpRequest(origin, routes[i][1], key, routes[i][0])
 
@@ -72,7 +65,7 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
             if (res2.data.status == "NOT_FOUND" && success == true) {
                 console.log(1)
                 success = false
-                sr.sendReturn(res, 404, {
+                sr.sendReturn(res, 403, {
                     error: true,
                     message: "Location not found"
                 });
@@ -97,36 +90,6 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
                     console.log(totalTime)
                     console.log(routes[i][0])
 
-                    // Find fastest itinerary
-                    let index = 0;
-                    let value = listDuration[0];
-                    for (let k = 1; k < listDuration.length; k++) {
-                        if (listDuration[k] < value) {
-                            value = listDuration[k];
-                            index = k;
-                        }
-                    }
-
-                    // Save itinerary for the API response
-                    wp = routes[index][0].toString() + "|" + routes[index][1].toString()
-                    shortestRoute = resRoutes[index]
-
-
-                    // Add manually the request object of the response, that we normally get through Directions Services
-                    let wp3 = []
-                    let wp2 = routes[index][0].split('|')
-
-                    for (let k = 0; k < wp2.length; k++) {
-                        wp3.push({
-                            location: { query: wp2[k] },
-                            stopover: true,
-                        });
-                    }
-
-
-                    waypoints = wp3
-                    destination = routes[index][1]
-
 
 
                 }
@@ -137,43 +100,36 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
                         success = false
                         sr.sendReturn(res);
                     }
-
-
+                }
+            }
+        }
+        if (success == true) {
+            // Find fastest itinerary
+            let index = 0;
+            let value = listDuration[0];
+            for (let k = 1; k < listDuration.length; k++) {
+                if (listDuration[k] < value) {
+                    value = listDuration[k];
+                    index = k;
                 }
             }
 
-
-
-
-        }
-        if (success == true) {
-
-
-
-
-
-            let request = {
-                destination: { query: destination },
-                origin: { query: origin },
-
-                waypoints: waypoints,
-                optimizeWaypoints: true,
-
-                //region: "FR",
-                //language: "fr",
-
-                travelMode: "DRIVING",
-
+            //Get correct orders of waypoints
+            origin = resRoutes[index].routes[0].legs[0].start_address
+            for (let m = 0; m < resRoutes[index].routes[0].legs.length; m++) {
+                wp4.push(resRoutes[index].routes[0].legs[m].end_address);
             }
-            console.log("request : ")
-            console.log(request)
-            shortestRoute.request = request;
+
+            // Add destination for the HTTP response
+            destination = wp4.pop()
+
 
             sr.sendReturn(res, 200, {
                 error: false,
                 message: "Shortest route found",
-                wp: wp,
-                route: shortestRoute
+                origin: origin,
+                waypoints: wp4,
+                destination: destination
             });
         }
 

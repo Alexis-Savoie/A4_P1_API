@@ -45,11 +45,8 @@ app.use(bodyParser.json())
 app.use("/", middleware.middleware)
 app.use(route)
 
-if (app.get("env") === "developement") {
-  app.use(morgan("tiny"))
-  console.log("Morgan inabled")
-}
+
 // Run serve
 app.listen(port, () => console.log(`listening on http://localhost:${port}`))
 
-console.log("isPeod : " + config.get("Constants.isProd"))
+console.log("isProd : " + config.get("Constants.isProd"))

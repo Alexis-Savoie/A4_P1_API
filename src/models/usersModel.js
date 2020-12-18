@@ -54,13 +54,6 @@ const Users = new Schema({
             required: true,
         },
 
-        emailUser: {
-            trim: true,
-            index: true,
-            type: String,
-            required: true,
-            lowercase: true,
-        },
     }]
 
 }, { timestamps: true })

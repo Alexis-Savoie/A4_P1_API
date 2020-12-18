@@ -47,8 +47,8 @@ login.post("/login", (req, res) => {
                                         sr.sendReturn(res, 200, {
                                             error: false,
                                             message: "login successful",
-                                            token: token,
-                                            email: email
+                                            token: token
+
                                         });
                                 });
                             } else {
@@ -72,8 +72,7 @@ login.post("/login", (req, res) => {
                                                     sr.sendReturn(res, 200, {
                                                         error: false,
                                                         message: "login successful (temporary password)",
-                                                        token: token,
-                                                        email: email
+                                                        token: token
                                                     });
                                                 }
                                             });
@@ -124,7 +123,7 @@ login.post("/login", (req, res) => {
 
 
 //#region user logout route
-login.post("/logout", middleware.middlewareSessionUser, (req, res) => {
+login.delete("/logout", middleware.middlewareSessionUser, (req, res) => {
         // check if an user is registered with this username
         const users = require('../../models/usersModel');
         let user = new users();

@@ -7,8 +7,6 @@ const users = require("../../models/usersModel")
 const forgotPass = require("express").Router()
 
 forgotPass.post("/sendTemporaryPassword", (req, res) => {
-
-    console.log("sendTemporaryPassword")
     const users = require("../../models/usersModel")
     const sr = require("../../others/sendReturn")
 
@@ -33,7 +31,6 @@ forgotPass.post("/sendTemporaryPassword", (req, res) => {
                         auth: {
                             user: 'joeltest047@gmail.com',
                             pass: config.get('Constants.emailPassword')
-
                         }
                     });
 
