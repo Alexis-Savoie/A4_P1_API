@@ -49,7 +49,7 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
         async function httpRequest(origin, destination, key, waypoints) {
             return axios({
                 method: "get",
-                url: 'https://maps.googleapis.com/maps/api/directions/json?origin=' + origin + '&destination=' + destination + '&mode=driving&key=' + key + '&waypoints=' + waypoints + '&region=FR&language=fr&optimizeWaypoints=true',
+                url: encodeURI('https://maps.googleapis.com/maps/api/directions/json?origin=' + origin + '&destination=' + destination + '&mode=driving&key=' + key + '&waypoints=' + waypoints + '&region=FR&language=fr&optimizeWaypoints=true'),
             }).then(res => res).catch(error => error);
         }
 
@@ -58,10 +58,10 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
         for (let i = 0; i < routes.length; i++) {
             // MAke the request and wait for the response
             let res2 = await httpRequest(origin, routes[i][1], key, routes[i][0])
-            console.log('https://maps.googleapis.com/maps/api/directions/json?origin=' + origin + '&destination=' + destination + '&mode=driving&key=' + key + '&waypoints=' + waypoints + '&region=FR&language=fr&optimizeWaypoints=true')
+                //console.log('https://maps.googleapis.com/maps/api/directions/json?origin=' + origin + '&destination=' + destination + '&mode=driving&key=' + key + '&waypoints=' + waypoints + '&region=FR&language=fr&optimizeWaypoints=true')
 
-            console.log(res2)
-                // INvalid adress case
+            //console.log(res2)
+            // INvalid adress case
             if (res2.data.status == "NOT_FOUND" && success == true) {
                 success = false
                 sr.sendReturn(res, 403, {
@@ -79,7 +79,7 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
             }
             // SUccess case
             else {
-                console.log(res2.data.status)
+                //console.log(res2.data.status)
                 if ((res2.data.routes[0])) {
                     // Store response data
                     resRoutes.push(res2.data)
