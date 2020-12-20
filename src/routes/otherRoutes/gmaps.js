@@ -58,23 +58,30 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
         for (let i = 0; i < routes.length; i++) {
             // MAke the request and wait for the response
             let res2 = await httpRequest(origin, routes[i][1], key, routes[i][0])
+            console.log('https://maps.googleapis.com/maps/api/directions/json?origin=' + origin + '&destination=' + destination + '&mode=driving&key=' + key + '&waypoints=' + waypoints + '&region=FR&language=fr&optimizeWaypoints=true')
 
-            //console.log(res2.status)
-
-            // INvalid adress case
+            console.log(res2)
+                // INvalid adress case
             if (res2.data.status == "NOT_FOUND" && success == true) {
-                console.log(1)
                 success = false
                 sr.sendReturn(res, 403, {
                     error: true,
-                    message: "Location not found"
+                    message: "Invalid location"
+                });
+            }
+            // Too many waypoints
+            else if (res2.data.status == "MAX_WAYPOINTS_EXCEEDED" && success == true) {
+                success = false
+                sr.sendReturn(res, 401, {
+                    error: true,
+                    message: "Too many locations"
                 });
             }
             // SUccess case
             else {
+                console.log(res2.data.status)
                 if ((res2.data.routes[0])) {
-                    console.log(2)
-                        // Store response data
+                    // Store response data
                     resRoutes.push(res2.data)
 
                     // Calculate the duration of this itinerary
@@ -87,8 +94,6 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
 
                     // Store the duration
                     listDuration.push(totalTime)
-                    console.log(totalTime)
-                    console.log(routes[i][0])
 
 
 
@@ -96,7 +101,6 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
                 // Failure case
                 else {
                     if (success == true) {
-                        console.log(3)
                         success = false
                         sr.sendReturn(res);
                     }
@@ -132,13 +136,6 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
                 destination: destination
             });
         }
-
-
-
-
-
-
-
     })
     //#endregion
 
