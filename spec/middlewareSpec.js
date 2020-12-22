@@ -6,9 +6,8 @@ if (constants.isProd == true)
 else 
     API_URL = "http://localhost:3000"
 */
-
-API_URL = "http://localhost:8020"
-//console.log("ENVIRONMENT PROD : " + config.get('Constants.isProd'))
+API_URL = config.get('Constants.API_URL')
+    //console.log("ENVIRONMENT PROD : " + config.get('Constants.isProd'))
 
 console.log("API_URL : " + API_URL)
 

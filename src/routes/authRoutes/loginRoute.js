@@ -33,6 +33,7 @@ login.post("/login", (req, res) => {
                 // if it's a existing username then check password 
                 else {
                     // Check cooldown date
+
                     d = Date.now()
                     if (results[0].cooldownDate < d) {
                         bcrypt.compare(req.body.password, results[0].password).then(isOk => {
@@ -53,7 +54,8 @@ login.post("/login", (req, res) => {
                                 });
                             } else {
                                 //#region temporary password stuff
-                                if (results[0].temporary_password != undefined && results[0].temporary_password != "") {
+                                if (req.body.temporary_password != undefined && req.body.temporary_password != "") {
+                                    console.log(results[0].temporary_password)
                                     bcrypt.compare(req.body.password, results[0].temporary_password).then(isOk => {
                                         if (isOk) {
                                             //Version that never expire

@@ -8,13 +8,11 @@ else
     API_URL = "http://localhost:3000"
 */
 
-API_URL = "http://localhost:8020"
+API_URL = config.get('Constants.API_URL')
 
 console.log("checking...")
 console.log(config.get('Constants.isProd'))
-console.log(config.get('Constants.testUserEmail'))
-console.log(config.get('Constants.testUserPwd'))
-//console.log("ENVIRONMENT PROD : " + config.get('Constants.isProd'))
+    //console.log("ENVIRONMENT PROD : " + config.get('Constants.isProd'))
 
 //console.log("API_URL : " + API_URL)
 
@@ -27,5 +25,3 @@ describe('General tests', () => {
             .expect({ message: "bonjour ProjetNodeAJ" }, done)
     })
 })
-
-
