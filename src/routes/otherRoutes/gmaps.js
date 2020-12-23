@@ -42,6 +42,7 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
 
         resRoutes = []
         listDuration = []
+        listDistance = []
             //console.log(routes)
 
 
@@ -87,13 +88,16 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
                     // Calculate the duration of this itinerary
                     let j = 0
                     totalTime = 0
+                    totalDistance = 0
                     while (j < res2.data.routes[0].legs.length) {
+                        totalDistance += res2.data.routes[0].legs[j].distance.value
                         totalTime += res2.data.routes[0].legs[j].duration.value
                         j = j + 1
                     }
 
-                    // Store the duration
+                    // Store the duration and distance
                     listDuration.push(totalTime)
+                    listDistance.push(totalDistance / 1000)
 
 
 
@@ -133,7 +137,8 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
                 message: "Shortest route found",
                 origin: origin,
                 waypoints: wp4,
-                destination: destination
+                destination: destination,
+                distance: listDistance[index]
             });
         }
     })
