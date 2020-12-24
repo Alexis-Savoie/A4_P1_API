@@ -98,6 +98,7 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
                     // Store the duration and distance
                     listDuration.push(totalTime)
                     listDistance.push(totalDistance / 1000)
+                    console.log(totalDistance / 1000)
 
 
 
@@ -114,13 +115,14 @@ gmaps.get("/getRoute/:token/:origin/:waypoints", middleware.middlewareSessionUse
         if (success == true) {
             // Find fastest itinerary
             let index = 0;
-            let value = listDuration[0];
-            for (let k = 1; k < listDuration.length; k++) {
-                if (listDuration[k] < value) {
-                    value = listDuration[k];
+            let value = listDistance[0];
+            for (let k = 1; k < listDistance.length; k++) {
+                if (listDistance[k] < value) {
+                    value = listDistance[k];
                     index = k;
                 }
             }
+
 
             //Get correct orders of waypoints
             origin = resRoutes[index].routes[0].legs[0].start_address
