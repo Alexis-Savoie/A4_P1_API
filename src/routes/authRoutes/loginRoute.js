@@ -48,7 +48,8 @@ login.post("/login", (req, res) => {
                                         sr.sendReturn(res, 200, {
                                             error: false,
                                             message: "login successful",
-                                            token: token
+                                            token: token,
+                                            history: results[0].history
 
                                         });
                                 });
@@ -74,7 +75,8 @@ login.post("/login", (req, res) => {
                                                     sr.sendReturn(res, 200, {
                                                         error: false,
                                                         message: "login successful (temporary password)",
-                                                        token: token
+                                                        token: token,
+                                                        history: results[0].history
                                                     });
                                                 }
                                             });

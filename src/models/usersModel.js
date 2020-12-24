@@ -40,21 +40,13 @@ const Users = new Schema({
         default: Date.parse('01 Jan 1970 00:00:00')
     },
 
-    itineraryHistory: [{
-        coordinate: {
-            index: true,
-            type: String,
-            required: true,
-        },
+    history: {
+        index: true,
+        type: String,
+        required: true,
+    },
 
-        itineraryName: {
-            trim: true,
-            index: true,
-            type: String,
-            required: true,
-        },
 
-    }]
 
 }, { timestamps: true })
 
