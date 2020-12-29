@@ -1,6 +1,6 @@
 // External packages
-const bcrypt = require("bcrypt")
-const jwt = require("jsonwebtoken")
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const config = require('config');
 
 // Local imports
