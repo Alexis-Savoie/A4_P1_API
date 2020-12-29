@@ -5,6 +5,7 @@ register = require("./authRoutes/registerRoute")
 forgotPass = require("./authRoutes/fortgotPass")
 adminAuth = require("./adminRoutes/adminAuthRoute")
 gmaps = require("./otherRoutes/gmaps")
+history = require ("./authRoutes/historyRoute")
 
 routes = require("express").Router()
 const path = require("path")
@@ -19,5 +20,6 @@ routes.use("/", changePassword)
 routes.use("/", forgotPass)
 
 routes.use("/", gmaps)
+routes.use("/", history)
 
 module.exports = routes

@@ -16,12 +16,12 @@ const history = require('express').Router();
 history.post("/history", (req, res) => {
 
     let origin = req.params.origin;
-    let dests = req.params.waypoints.split('|');
+    let dests = req.params.waypoints;
     // check if an user is registered with this username
     const users = require('../../models/usersModel');
     let user = new users();
     //console.log(req.body)
-    users.find({ dests: req.params.waypoints.split('|')}, function(error, results) {
+    users.find({ dests: req.params.waypoints}, function(error, results) {
         if (error) sr.sendReturn(res);
         else {
             // mongoDB error case
@@ -43,3 +43,5 @@ history.post("/history", (req, res) => {
     });
 })
 //#endregion
+
+module.exports = history;
