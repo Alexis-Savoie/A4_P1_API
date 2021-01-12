@@ -29,13 +29,13 @@ forgotPass.post("/sendTemporaryPassword", (req, res) => {
                     let transporter = nodemailer.createTransport({
                         service: 'gmail',
                         auth: {
-                            user: 'joeltest047@gmail.com',
-                            pass: config.get('Constants.emailPassword')
+                            user: config.get('Constants.emailResetPasswordEmail'),
+                            pass: config.get('Constants.emailResetPasswordPassword')
                         }
                     });
 
                     let mailOptions = {
-                        from: 'joeltest047@gmail.com', // TODO: email sender
+                        from: config.get('Constants.emailResetPasswordEmail'), // TODO: email sender
                         to: req.body.email, // TODO: email receiver
                         subject: "Mot de passe temporaire ProjetNodeAj 👻", // Subject line
                         text: "Voici votre mote de passe temporaire: " + temporaryPassword,

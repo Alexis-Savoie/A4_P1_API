@@ -7,6 +7,10 @@
         "testUserEmail": "",
         "testUserPwd": "",
 
+        "emailResetPasswordEmail": "",
+        "emailResetPasswordPassword": "",
+
+
         "emailPassword": "",
         "GMAPS_API_KEY": "",
         "API_URL": "http://localhost:8020"
