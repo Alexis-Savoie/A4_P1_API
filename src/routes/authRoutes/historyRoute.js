@@ -11,6 +11,7 @@ const middleware = require('../otherRoutes/middleware');
 const history = require('express').Router();
 
 
+//HistoryRoute
 
 //#region user connexion route
 history.post("/history", (req, res) => {
