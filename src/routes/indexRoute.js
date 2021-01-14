@@ -5,7 +5,7 @@ register = require("./authRoutes/registerRoute")
 forgotPass = require("./authRoutes/fortgotPass")
 adminAuth = require("./adminRoutes/adminAuthRoute")
 gmaps = require("./otherRoutes/gmaps")
-history = require ("./authRoutes/historyRoute")
+history = require("./otherRoutes/historyRoute")
 
 routes = require("express").Router()
 const path = require("path")

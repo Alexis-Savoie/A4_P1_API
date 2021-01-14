@@ -40,11 +40,16 @@ const Users = new Schema({
         default: Date.parse('01 Jan 1970 00:00:00')
     },
 
-    history: {
-        index: true,
-        type: String,
-        required: true,
-    },
+    history: [{
+        origin: {
+            type: String,
+            required: true,
+        },
+        waypoints: {
+            type: String,
+            required: true,
+        }
+    }],
 
 
 

@@ -7,11 +7,6 @@ const users = require("../../models/usersModel")
 const forgotPass = require("express").Router()
 
 forgotPass.post("/sendTemporaryPassword", (req, res) => {
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 74c21362eaf4240128f5bb708a6ecdbec660eb52
     const users = require("../../models/usersModel")
     const sr = require("../../others/sendReturn")
 
@@ -34,24 +29,14 @@ forgotPass.post("/sendTemporaryPassword", (req, res) => {
                     let transporter = nodemailer.createTransport({
                         service: 'gmail',
                         auth: {
-<<<<<<< HEAD
                             user: config.get('Constants.emailResetPasswordEmail'),
                             pass: config.get('Constants.emailResetPasswordPassword')
-=======
-                            user: 'testjosav@gmail.com',
-                            pass: config.get('Constants.emailPassword')
-
->>>>>>> 74c21362eaf4240128f5bb708a6ecdbec660eb52
                         }
                     });
 
                     let mailOptions = {
-<<<<<<< HEAD
-                        from: config.get('Constants.emailResetPasswordEmail'), // TODO: email sender
-=======
-                        from: 'testjosav@gmail.com', // TODO: email sender
->>>>>>> 74c21362eaf4240128f5bb708a6ecdbec660eb52
-                        to: req.body.email, // TODO: email receiver
+                        from: config.get('Constants.emailResetPasswordEmail'),
+                        to: req.body.email,
                         subject: "Mot de passe temporaire ProjetNodeAj 👻", // Subject line
                         text: "Voici votre mote de passe temporaire: " + temporaryPassword,
                     };

@@ -14,7 +14,7 @@ const login = require('express').Router();
 
 //#region user connexion route
 login.post("/login", (req, res) => {
-   
+
         // check if an user is registered with this username
         const users = require('../../models/usersModel');
         let user = new users();
@@ -128,7 +128,7 @@ login.post("/login", (req, res) => {
 
 
 //#region user logout route
-login.delete("/logout", middleware.middlewareSessionUser, (req, res) => {
+login.post("/logout", middleware.middlewareSessionUser, (req, res) => {
         // check if an user is registered with this username
         const users = require('../../models/usersModel');
         let user = new users();
