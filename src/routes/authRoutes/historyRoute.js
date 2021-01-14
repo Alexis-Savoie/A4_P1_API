@@ -38,6 +38,7 @@ history.post("/history", (req, res) => {
             else {
                 // Check cooldown date
                  // Check cooldown date
+                  // Check cooldown date
 
                
             }
