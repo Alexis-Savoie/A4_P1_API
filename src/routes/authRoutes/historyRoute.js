@@ -37,6 +37,7 @@ history.post("/history", (req, res) => {
             // if it's a existing username then check password 
             else {
                 // Check cooldown date
+                 // Check cooldown date
 
                
             }
