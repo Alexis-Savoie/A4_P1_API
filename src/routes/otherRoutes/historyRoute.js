@@ -22,11 +22,16 @@ history.get("/getHistory/:token", middleware.middlewareSessionUser, (req, res) =
                 error: true,
                 message: "This user have an empty history"
             });
-        else
+        else {
+            rHistory = results[0].history
+                // We use reverse to have the history sorted by most recent first
+            rHistory.reverse()
             sr.sendReturn(res, 200, {
                 error: false,
-                history: results[0].history
+                history: rHistory
             });
+        }
+
     })
 })
 
