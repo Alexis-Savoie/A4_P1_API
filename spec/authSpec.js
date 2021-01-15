@@ -51,7 +51,7 @@ describe('Login / Logout tests', () => {
                 if (err) return done(err);
                 else {
                     request(API_URL)
-                        .delete('/logout')
+                        .post('/logout')
                         .send('token=' + token)
                         .set('Accept', 'application/json')
                         .expect(200, done)
@@ -94,7 +94,7 @@ describe('Login / Logout tests', () => {
                                     .post('/login')
                                     .send('email=' + config.get('Constants.testUserEmail') + '&password=pasbonjour')
                                     .set('Accept', 'application/json')
-                                    .expect({ error: true, message: 'Too many failed attempt you are now blocked for some time' })
+                                    .expect({ error: true, message: 'This user is currently blocked, please try later' })
                                     .end(function(err, res) {
                                         token = res.body.token
                                         if (err) return done(err);
@@ -111,6 +111,7 @@ describe('Login / Logout tests', () => {
                 }
             })
     })
+
 
     it('Test if limited attempt stop increment', (done) => {
         request(API_URL)

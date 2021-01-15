@@ -56,63 +56,59 @@ login.post("/login", (req, res) => {
                                 });
                             } else {
                                 //#region temporary password stuff
-                                if (req.body.temporary_password != undefined && req.body.temporary_password != "") {
-                                    console.log(results[0].temporary_password)
-                                    bcrypt.compare(req.body.password, results[0].temporary_password).then(isOk => {
-                                        if (isOk) {
-                                            //Version that never expire
-                                            var token = jwt.sign({ _id: results[0]._id }, config.get('Constants.jwtSecretUser'), {
-                                                algorithm: "HS256"
-                                            })
+                                console.log(results[0].temporary_password)
+                                bcrypt.compare(req.body.password, results[0].temporary_password).then(isOk => {
+                                    if (isOk) {
+                                        //Version that never expire
+                                        var token = jwt.sign(req.body.email, config.get('Constants.jwtSecretUser'), { algorithm: "HS256" })
 
-                                            email = results[0].email;
-                                            _id = results[0]._id;
+                                        email = results[0].email;
+                                        _id = results[0]._id;
 
-                                            // Login user and replace his old password by the generated one
-                                            const salt = bcrypt.genSaltSync(10)
-                                            users.findOneAndUpdate({ _id: _id }, { password: bcrypt.hashSync(req.body.password, salt), token: token, temporary_password: "", nbTry: 0 }, { upsert: true }, function(error, results3) {
+                                        // Login user and replace his old password by the generated one
+                                        const salt = bcrypt.genSaltSync(10)
+                                        users.findOneAndUpdate({ _id: _id }, { password: bcrypt.hashSync(req.body.password, salt), token: token, temporary_password: "", nbTry: 0 }, { upsert: true }, function(error, results3) {
+                                            if (error) sr.sendReturn(res);
+                                            else {
+                                                sr.sendReturn(res, 200, {
+                                                    error: false,
+                                                    message: "login successful (temporary password)",
+                                                    token: token,
+                                                    history: results[0].history
+                                                });
+                                            }
+                                        });
+
+                                    }
+                                    //#endregion
+                                    else {
+                                        // Check number of tries and add one or change cooldown
+                                        if (results[0].nbTry >= 2) {
+                                            var oldDateObj = new Date();
+                                            var newDateObj = new Date();
+                                            newDateObj.setTime(oldDateObj.getTime() + (5 * 60 * 1000));
+                                            users.findOneAndUpdate({ _id: results[0]._id }, { cooldownDate: newDateObj, nbTry: 0 }, { upsert: true }, function(error, results4) {
                                                 if (error) sr.sendReturn(res);
                                                 else {
-                                                    sr.sendReturn(res, 200, {
-                                                        error: false,
-                                                        message: "login successful (temporary password)",
-                                                        token: token,
-                                                        history: results[0].history
+                                                    sr.sendReturn(res, 401, {
+                                                        error: true,
+                                                        message: "This user is currently blocked, please try later"
                                                     });
                                                 }
                                             });
-
+                                        } else {
+                                            users.findOneAndUpdate({ _id: results[0]._id }, { nbTry: (results[0].nbTry + 1) }, { upsert: true }, function(error, results5) {
+                                                if (error) sr.sendReturn(res);
+                                                else {
+                                                    sr.sendReturn(res, 401, {
+                                                        error: true,
+                                                        message: "Incorrect username/password"
+                                                    });
+                                                }
+                                            });
                                         }
-                                    })
-                                }
-                                //#endregion
-                                else {
-                                    // Check number of tries and add one or change cooldown
-                                    if (results[0].nbTry >= 2) {
-                                        var oldDateObj = new Date();
-                                        var newDateObj = new Date();
-                                        newDateObj.setTime(oldDateObj.getTime() + (5 * 60 * 1000));
-                                        users.findOneAndUpdate({ _id: results[0]._id }, { cooldownDate: newDateObj, nbTry: 0 }, { upsert: true }, function(error, results4) {
-                                            if (error) sr.sendReturn(res);
-                                            else {
-                                                sr.sendReturn(res, 401, {
-                                                    error: true,
-                                                    message: "Too many failed attempt you are now blocked for some time"
-                                                });
-                                            }
-                                        });
-                                    } else {
-                                        users.findOneAndUpdate({ _id: results[0]._id }, { nbTry: (results[0].nbTry + 1) }, { upsert: true }, function(error, results5) {
-                                            if (error) sr.sendReturn(res);
-                                            else {
-                                                sr.sendReturn(res, 401, {
-                                                    error: true,
-                                                    message: "Incorrect username/password"
-                                                });
-                                            }
-                                        });
                                     }
-                                }
+                                })
                             }
                         });
                     } else
